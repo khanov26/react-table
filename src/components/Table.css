@@ -1,0 +1,7 @@
+.persons-table tr {
+    cursor: pointer;
+}
+
+.persons-table tr.selected {
+    --bs-table-accent-bg: var(--bs-table-active-bg);
+}
