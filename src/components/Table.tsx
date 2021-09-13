@@ -1,26 +1,49 @@
 import React, {useState} from "react";
 import PersonType from "../types/Person";
 import PersonInfo from "./PersonInfo";
+import SortType from "../types/SortType";
 
 type Props = {
     persons: PersonType[];
+    sort: SortType | null;
+    setSort: (sort: SortType) => void;
 };
 
 const Table: React.FC<Props> = props => {
-    const {persons} = props;
+    const {persons, sort, setSort} = props;
 
     const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
+
+    const tablesFields: Array<keyof PersonType>= ["id", "firstName", "lastName", "email", "phone"];
+
+    const handleTableHeadClick = (headName: keyof PersonType): void => {
+        if (headName === sort?.field) {
+            setSort({
+                field: headName,
+                direction: sort.direction === "asc" ? "desc" : "asc",
+            });
+        } else {
+            setSort({
+                field: headName,
+                direction: "asc",
+            });
+        }
+    };
 
     return (
         <>
             <table className="table table-hover persons-table">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>firstName</th>
-                    <th>lastName</th>
-                    <th>email</th>
-                    <th>phone</th>
+                    {tablesFields.map(field => {
+                        let sortIcon = "";
+                        if (sort?.field === field) {
+                            sortIcon = sort.direction === "asc" ? '🠗' : "🠕";
+                        }
+                        return (
+                            <th onClick={() => handleTableHeadClick(field)}>{field} {sortIcon}</th>
+                        )
+                    })}
                 </tr>
                 </thead>
                 <tbody>
