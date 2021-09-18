@@ -1,0 +1,31 @@
+.filter-form__input-wrapper {
+    position: relative;
+}
+
+.filter-form__reset {
+    position: absolute;
+    top: 7px;
+    right: 24px;
+    cursor: pointer;
+}
+
+.filter-form {
+    transition: transform 500ms;
+    transform-origin: top;
+}
+
+.filter-form--enter {
+    transform: scaleY(0);
+}
+
+.filter-form--entering {
+    transform: scaleY(1);
+}
+
+.filter-form--exit {
+    transform: scaleY(1);
+}
+
+.filter-form--exiting {
+    transform: scaleY(0);
+}

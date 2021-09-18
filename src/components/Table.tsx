@@ -7,6 +7,7 @@ import Loader from "./Loader";
 import {useHistory, useLocation, Link} from "react-router-dom";
 import Pagination from "./Pagination";
 import {chunk, getSortedData, QueryParams} from "../helpers";
+import Filter from "./Filter";
 
 type Props = {
     dataSize: DataSize;
@@ -59,7 +60,28 @@ const Table: React.FC<Props> = props => {
     const [sort, setSort] = useState<SortType | null>(null);
 
 
-    const sortedPersons = useMemo(() => getSortedData(persons, sort), [persons, sort]);
+    const [filter, setFilter] = useState("");
+
+    useEffect(() => {
+        setFilter(queryParams.filter);
+    }, [queryParams.filter]);
+
+    const filteredPersons = useMemo(() => {
+        const regex = new RegExp(filter, "i");
+
+        return persons.filter(person => {
+            for (let value of Object.values(person)) {
+                if (regex.test(value.toString())) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    }, [persons, filter]);
+
+
+    const sortedPersons = useMemo(() => getSortedData(filteredPersons, sort), [filteredPersons, sort]);
 
 
     const handleTableHeadClick = (headName: keyof PersonType): void => {
@@ -92,7 +114,7 @@ const Table: React.FC<Props> = props => {
     const elementPerPage = 50;
     const totalElementsNumber = persons.length;
     const totalPageNumber = Math.ceil(totalElementsNumber / elementPerPage);
-    const currentPage =  queryParams.page ? Number(queryParams.page) : 1;
+    const currentPage = queryParams.page ? Number(queryParams.page) : 1;
 
     const showingPersons: PersonType[] | undefined = chunk(sortedPersons, elementPerPage)[currentPage - 1];
 
@@ -116,33 +138,42 @@ const Table: React.FC<Props> = props => {
             {loading ?
                 <Loader/> :
                 <>
-                    <table className="table table-hover persons-table">
-                        <thead>
-                        <tr>
-                            {tablesFields.map(field => {
-                                let sortIcon = "";
-                                if (sort?.field === field) {
-                                    sortIcon = sort.direction === "asc" ? '🠗' : "🠕";
-                                }
-                                return (
-                                    <th key={field} onClick={() => handleTableHeadClick(field)}>{field} {sortIcon}</th>
-                                )
-                            })}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {showingPersons.map(person => (
-                            <tr key={person.id + person.firstName} className={selectedPerson?.id === person.id ? "selected" : ""}
-                                onClick={() => setSelectedPerson(person)}>
-                                <th>{person.id}</th>
-                                <td>{person.firstName}</td>
-                                <td>{person.lastName}</td>
-                                <td>{person.email}</td>
-                                <td>{person.phone}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    <Filter/>
+
+                    {showingPersons ?
+                        <div className="table-responsive">
+                            <table className="table table-hover  persons-table">
+                                <thead>
+                                <tr>
+                                    {tablesFields.map(field => {
+                                        let sortIcon = "";
+                                        if (sort?.field === field) {
+                                            sortIcon = sort.direction === "asc" ? '🠗' : "🠕";
+                                        }
+                                        return (
+                                            <th key={field}
+                                                onClick={() => handleTableHeadClick(field)}>{field} {sortIcon}</th>
+                                        )
+                                    })}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {showingPersons.map(person => (
+                                    <tr key={person.id + person.firstName}
+                                        className={selectedPerson?.id === person.id ? "selected" : ""}
+                                        onClick={() => setSelectedPerson(person)}>
+                                        <th>{person.id}</th>
+                                        <td>{person.firstName}</td>
+                                        <td>{person.lastName}</td>
+                                        <td>{person.email}</td>
+                                        <td>{person.phone}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div> :
+                        <div className="alert alert-warning">Никто не найден</div>
+                    }
 
                     {selectedPerson !== null &&
                     <PersonInfo person={selectedPerson} resetSelectedPerson={() => setSelectedPerson(null)}/>}
