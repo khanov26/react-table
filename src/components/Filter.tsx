@@ -26,6 +26,7 @@ const Filter: React.FC = () => {
         history.push("/?" + QueryParams.build({
             ...queryParams,
             "filter": String(input.value),
+            "page": "1",
         }));
     };
 
@@ -35,6 +36,7 @@ const Filter: React.FC = () => {
         history.push("/?" + QueryParams.build({
             ...queryParams,
             "filter": "",
+            "page": "1",
         }));
     };
 

@@ -112,7 +112,7 @@ const Table: React.FC<Props> = props => {
 
 
     const elementPerPage = 50;
-    const totalElementsNumber = persons.length;
+    const totalElementsNumber = sortedPersons.length;
     const totalPageNumber = Math.ceil(totalElementsNumber / elementPerPage);
     const currentPage = queryParams.page ? Number(queryParams.page) : 1;
 
