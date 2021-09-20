@@ -17,10 +17,10 @@ const PersonInfo: React.FC<Props> = props => {
                 <div>Описание:</div>
                 <textarea readOnly value={person.description} className="w-100"/>
             </div>
-            <div>Адрес проживания: <b>{person.address.streetAddress}</b></div>
-            <div>Город: <b>{person.address.city}</b></div>
-            <div>Провинция/штат: <b>{person.address.state}</b></div>
-            <div>Индекс: <b>{person.address.zip}</b></div>
+            <div>Адрес проживания: <b>{person.address?.streetAddress}</b></div>
+            <div>Город: <b>{person.address?.city}</b></div>
+            <div>Провинция/штат: <b>{person.address?.state}</b></div>
+            <div>Индекс: <b>{person.address?.zip}</b></div>
 
             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"
                     onClick={resetSelectedPerson}></button>

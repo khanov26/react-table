@@ -4,7 +4,7 @@ type PersonType = {
     lastName: string;
     email: string;
     phone: string;
-    address: {
+    address?: {
         streetAddress: string;
         city: string;
         state: string;

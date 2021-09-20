@@ -8,6 +8,7 @@ import {useHistory, useLocation, Link} from "react-router-dom";
 import Pagination from "./Pagination";
 import {chunk, getSortedData, QueryParams} from "../helpers";
 import Filter from "./Filter";
+import Add from "./Add";
 
 type Props = {
     dataSize: DataSize;
@@ -24,6 +25,10 @@ const Table: React.FC<Props> = props => {
 
 
     const [persons, setPersons] = useState<PersonType[]>([]);
+
+    function addNewPerson(newPerson: PersonType) {
+        setPersons(prevState => [newPerson, ...prevState]);
+    }
 
     useEffect(() => {
         if (loading) {
@@ -139,6 +144,8 @@ const Table: React.FC<Props> = props => {
                 <Loader/> :
                 <>
                     <Filter/>
+
+                    <Add addNewPerson={addNewPerson} />
 
                     {showingPersons ?
                         <div className="table-responsive">
