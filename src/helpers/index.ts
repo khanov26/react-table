@@ -1,6 +1,3 @@
-import PersonType from "../types/Person";
-import SortType from "../types/SortType";
-
 export class QueryParams {
     static parse(queryString: string): Record<string, string> {
         const queryParams = new URLSearchParams(queryString);
@@ -24,7 +21,7 @@ export class QueryParams {
     }
 }
 
-export function chunk (arr: any[], chunkSize: number) {
+export function chunk<T> (arr: T[], chunkSize: number): T[][] {
     const chunksNumber = Math.ceil(arr.length / chunkSize);
 
     const chunks = [];
@@ -36,7 +33,7 @@ export function chunk (arr: any[], chunkSize: number) {
     return chunks;
 }
 
-export function getSortedData(data: PersonType[], sort: SortType | null): PersonType[] {
+export function getSortedData<T extends { id: number }, S extends { field: keyof T, direction: "asc" | "desc" } | null>(data: T[], sort: S | null): T[] {
     if (sort === null) {
         return data;
     }
@@ -46,13 +43,13 @@ export function getSortedData(data: PersonType[], sort: SortType | null): Person
     const compareFunction = (() => {
         if (sort.field === "id") {
             return sort.direction === "asc" ?
-                (a: PersonType, b: PersonType) => a.id - b.id :
-                (a: PersonType, b: PersonType) => b.id - a.id
+                (a: T, b: T) => a.id - b.id :
+                (a: T, b: T) => b.id - a.id
         }
 
         return sort.direction === "asc" ?
-            (a: PersonType, b: PersonType) => (a[sort.field] as string).localeCompare((b[sort.field] as string)) :
-            (a: PersonType, b: PersonType) => (b[sort.field] as string).localeCompare((a[sort.field] as string))
+            (a: T, b: T) => String(a[sort.field]).localeCompare(String(b[sort.field])) :
+            (a: T, b: T) => String(b[sort.field]).localeCompare(String(a[sort.field]))
     })();
 
     clonedData.sort(compareFunction);

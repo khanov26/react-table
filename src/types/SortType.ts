@@ -1,7 +1,5 @@
-import PersonType from "./Person";
-
-type SortType = {
-    field: keyof PersonType,
+type SortType<T> = {
+    field: keyof T,
     direction: "asc" | "desc";
 };
 

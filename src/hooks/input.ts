@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 
 type ValueType = string;
 
 const useInput = (initialValue: ValueType) => {
     const [value, setValue] = useState(initialValue);
 
-    const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = e => {
-        setValue(e.target.value);
-    };
+    const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = useCallback(e => {
+        setValue(e.currentTarget.value);
+    }, []);
 
     return {
         bind: {

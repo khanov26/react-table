@@ -1,19 +1,14 @@
-import React from "react";
-import {useLocation, Link} from "react-router-dom";
-import {QueryParams} from "../helpers";
+import React, { memo } from "react";
 
 type Props = {
     elementPerPage: number;
     totalElementsNumber: number;
     currentPage: number;
+    onChange: (page: number) => void;
 };
 
 const Pagination: React.FC<Props> = (props) => {
-    const {elementPerPage, totalElementsNumber, currentPage} = props;
-
-
-    const {search: querySearch} = useLocation();
-    const queryParams = QueryParams.parse(querySearch);
+    const {elementPerPage, totalElementsNumber, currentPage, onChange} = props;
 
     const totalPageNumber = Math.ceil(totalElementsNumber / elementPerPage);
 
@@ -37,20 +32,15 @@ const Pagination: React.FC<Props> = (props) => {
     }
 
     const showPrevLink = currentPage > 1;
-    const prevLink = "/?" + QueryParams.build({
-        ...queryParams,
-        "page": String(currentPage - 1),
-    });
-
     const showNextLink = currentPage < totalPageNumber;
-    const nextLink = "/?" + QueryParams.build({
-        ...queryParams,
-        "page": String(currentPage + 1),
-    });
 
     const pages = new Array(endPage - startPage + 1)
         .fill(startPage)
         .map((value, index) => value + index);
+
+    const handleChangePage = (page: number) => () => {
+        onChange(page);
+    };
 
 
     return (
@@ -58,29 +48,28 @@ const Pagination: React.FC<Props> = (props) => {
             <ul className="pagination justify-content-center">
                 {showPrevLink &&
                     <li key="prev" className="page-item">
-                      <Link to={prevLink} className="page-link">
+                      <button className="page-link" onClick={handleChangePage(currentPage - 1)}>
                         <span aria-hidden="true">&laquo;</span>
-                      </Link>
+                      </button>
                     </li>
                 }
 
                 {pages.map(page => {
-                    const pageUrl = "/?" + QueryParams.build({...queryParams, page});
                     return page === currentPage ?
                         <li key={page} className="page-item active">
-                            <a className="page-link">{page}</a>
+                            <button className="page-link">{page}</button>
                         </li> :
-                        <li className="page-item">
-                            <Link to={pageUrl} className="page-link">{page}</Link>
+                        <li key={page} className="page-item">
+                            <button className="page-link" onClick={handleChangePage(page)}>{page}</button>
                         </li>
                 })}
 
 
                 {showNextLink &&
                     <li key="next" className="page-item">
-                      <Link to={nextLink} className="page-link">
+                      <button className="page-link" onClick={handleChangePage(currentPage + 1)}>
                         <span aria-hidden="true">&raquo;</span>
-                      </Link>
+                      </button>
                     </li>
                 }
             </ul>
@@ -88,4 +77,4 @@ const Pagination: React.FC<Props> = (props) => {
     );
 };
 
-export default Pagination;
+export default memo(Pagination);

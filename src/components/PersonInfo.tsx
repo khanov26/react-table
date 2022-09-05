@@ -1,6 +1,5 @@
-import React from "react";
+import React, { memo } from "react";
 import PersonType from "../types/Person";
-import "./Table.css";
 
 type Props = {
     person: PersonType;
@@ -28,4 +27,4 @@ const PersonInfo: React.FC<Props> = props => {
     );
 };
 
-export default PersonInfo;
+export default memo(PersonInfo);

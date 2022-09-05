@@ -1,15 +1,15 @@
-import React, {useState} from "react";
-import "./Add.css";
-import useInput from "../hooks/inputHook";
-import InputsValidationType from "../types/InputsValidationType";
+import React, { memo, useState } from "react";
+import "./styles.css";
+import useInput from "../../hooks/input";
+import InputsValidationType from "../../types/InputsValidationType";
 import InputMask from "react-input-mask";
-import PersonType from "../types/Person";
+import PersonType from "../../types/Person";
 
 type Props = {
     addNewPerson: (person: PersonType) => void;
 };
 
-const Add: React.FC<Props> = (props) => {
+const AddPerson: React.FC<Props> = (props) => {
     const [modalShow, setModalShow] = useState(false);
 
     const closeModal = () => {
@@ -111,7 +111,7 @@ const Add: React.FC<Props> = (props) => {
             }
         }
 
-        const pattern = /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/;
+        const pattern = /^([\w.-]+)@([\w-]+)((\.(\w){2,3})+)$/;
         if (!pattern.test(email)) {
             return {
                 hasError: true,
@@ -184,58 +184,58 @@ const Add: React.FC<Props> = (props) => {
 
     return (
         <>
-            <button className="btn btn-success my-3" onClick={() => setModalShow(true)}>
+            <button className="btn btn-success" onClick={() => setModalShow(true)}>
                 Добавить
             </button>
 
             <div className={`modal ${modalShow ? "modal--show" : ""}`}>
-                <div className="modal__background" onClick={closeModal}/>
+                <div className="modal__background" onClick={closeModal} />
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">Добавить пользователя</h5>
-                        <button type="button" className="btn-close" onClick={closeModal}/>
+                        <button type="button" className="btn-close" onClick={closeModal} />
                     </div>
                     <div className="modal-body">
                         <form>
                             <div className="mb-3">
                                 <label htmlFor="id" className="form-label">ID</label>
-                                <input type="text" className="form-control" id="id" {...id.bind}/>
+                                <input type="text" className="form-control" id="id" {...id.bind} />
                                 {inputsValidationState.id.hasError &&
-                                <div className="form-text text-danger">{inputsValidationState.id.errorText}</div>
+                                    <div className="form-text text-danger">{inputsValidationState.id.errorText}</div>
                                 }
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="firstName" className="form-label">First Name</label>
-                                <input type="text" className="form-control" id="firstName" {...firstName.bind}/>
+                                <input type="text" className="form-control" id="firstName" {...firstName.bind} />
                                 {inputsValidationState.firstName.hasError &&
-                                <div className="form-text text-danger">{inputsValidationState.firstName.errorText}</div>
+                                    <div className="form-text text-danger">{inputsValidationState.firstName.errorText}</div>
                                 }
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="lastName" className="form-label">Last Name</label>
-                                <input type="text" className="form-control" id="lastName" {...lastName.bind}/>
+                                <input type="text" className="form-control" id="lastName" {...lastName.bind} />
                                 {inputsValidationState.lastName.hasError &&
-                                <div className="form-text text-danger">{inputsValidationState.lastName.errorText}</div>
+                                    <div className="form-text text-danger">{inputsValidationState.lastName.errorText}</div>
                                 }
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="email" className="form-label">Email</label>
-                                <input type="text" className="form-control" id="email" {...email.bind}/>
+                                <input type="text" className="form-control" id="email" {...email.bind} />
                                 {inputsValidationState.email.hasError &&
-                                <div className="form-text text-danger">{inputsValidationState.email.errorText}</div>
+                                    <div className="form-text text-danger">{inputsValidationState.email.errorText}</div>
                                 }
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="phone" className="form-label">Phone</label>
                                 <InputMask mask="(999)999-9999" id="phone" {...phone.bind}>
-                                    {(inputProps: Record<string, string>) => <input type="text" className="form-control" {...inputProps}/>}
+                                    {(inputProps: Record<string, string>) => <input type="text" className="form-control" {...inputProps} />}
                                 </InputMask>
                                 {inputsValidationState.phone.hasError &&
-                                <div className="form-text text-danger">{inputsValidationState.phone.errorText}</div>
+                                    <div className="form-text text-danger">{inputsValidationState.phone.errorText}</div>
                                 }
                             </div>
                         </form>
@@ -251,4 +251,4 @@ const Add: React.FC<Props> = (props) => {
     );
 };
 
-export default Add;
+export default memo(AddPerson);
